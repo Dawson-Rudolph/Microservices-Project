@@ -4,9 +4,6 @@ import json
 
 app = Flask(__name__)
 
-# Run this function in terminal to start your Minio server:
-# docker run -p 9000:9000 -p 9001:9001 --name minio -d quay.io/minio/minio server /data --console-address ":9001"
-
 # create function
 @app.route('/upload', methods=['PUT'])
 def upload():
@@ -58,4 +55,4 @@ def delete():
         return jsonify({'message': 'Bucket does not exist'}), 400
 
 if __name__ == '__main__':
-   app.run(port=5001)
+   app.run(host='0.0.0.0', port=5000)
