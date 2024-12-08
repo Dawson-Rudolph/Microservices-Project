@@ -1,0 +1,49 @@
+services:
+  traefik:
+    image: "traefik:v2.11"
+    ports:
+      - "80:80"
+    environment:
+      - TRAEFIK_ENTRYPOINTS_WEB_ADDRESS=:80
+      - TRAEFIK_LOG_LEVEL=DEBUG
+      - TRAEFIK_PROVIDERS_DOCKER_WATCH=true
+      - TRAEFIK_PROVIDERS_DOCKER_EXPOSEDBYDEFAULT=true
+      - TRAEFIK_API_DASHBOARD=true
+    labels:
+      - "traefik.http.routers.api.rule=Host(`traefik.localtest.me`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.routers.api.service=api@internal"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  login:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: login_service
+    labels:
+      traefik.http.routers.login.rule: Host(`localtest.me`) && PathPrefix(`/login`)
+
+  minio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: minio_service
+    labels:
+      traefik.http.routers.minio.rule: Host(`localtest.me`) && PathPrefix(`/minio`)
+
+  minio-deployment:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: minio-deployment_service
+    labels:
+      traefik.http.routers.minio-deployment.rule: Host(`localtest.me`) && PathPrefix(`/minio-deployment`)
+
+  purchase:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: purchase_service
+    labels:
+      traefik.http.routers.purchase.rule: Host(`localtest.me`) && PathPrefix(`/purchase`)

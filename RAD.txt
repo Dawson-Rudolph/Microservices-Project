@@ -1,0 +1,130 @@
+Requirements Analysis Document
+
+OVERVIEW:
+
+This document briefly discusses the requirements and technical aspects of this project. We were required to create
+three different "applications" (In our case 3 flask apps), one of which being able to upload to a database and perform 
+CRUD opperations. After the creation of these three apps, we were tasked with creating a Dockerfile to allow for our 
+applciations to be deployed using Docker containers. We were then tasked with creating a general compose file for deploying
+to Docker and then another compose file that would allow these to be deployed with a reverse proxy through the use of
+Traefik.
+
+APPLICATIONS:
+
+
+--- 1. Login Service: ---
+
+Required imports: Flask, request, jsonify, json
+
+This is a basic flask app that has two POST functions that allow you to send a request with login information and if 
+the correct user name and password is passed in the request then you will get a success message back and if not it 
+will return a failed message. The other function is a basic logout that when hit sends back a message saying you have
+been logged out.
+
+Example input:
+
+Login:
+
+{
+    "username": "TopicsInSE",
+    "password": "CS480"
+}
+
+
+--- 2. Minio Service: ---
+
+Required imports: minio, Flask, request, jsonify, json
+
+This is another flask app but it allows you to perfom the 4 CRUD opperations. We have an upload function that allows you
+to upload a file of your choice to an S3 bucket in minio. There is then a list function that allows you to list your files
+in a given bucket. There is an update function that deletes the old file and uploads a newer (updated) version. Lastly, there
+is a delete function that allows you to delete a given file from an S3 bucket.
+
+Example inputs:
+
+Upload:
+
+{
+    "url": "localhost:9000",
+    "accessKey": "dawson",
+    "secretKey": "dawsonrudolph",
+    "bucketName": "dawsonbucket",
+    "filename": "test.txt",
+    "filepath": "/Users/dawson/Desktop/Microservices Project/Microservices-Project/Services/test.txt"
+}
+
+List:
+
+{
+    "url": "localhost:9000",
+    "accessKey": "dawson",
+    "secretKey": "dawsonrudolph",
+    "bucketName": "dawsonbucket"
+}
+
+Delete:
+
+{
+    "url": "localhost:9000",
+    "accessKey": "dawson",
+    "secretKey": "dawsonrudolph",
+    "bucketName": "dawsonbucket",
+    "filename": "test.txt"
+}
+
+Update:
+
+{
+    "url": "localhost:9000",
+    "accessKey": "dawson",
+    "secretKey": "dawsonrudolph",
+    "bucketName": "dawsonbucket",
+    "filename": "test.txt",
+    "filepath": "/Users/dawson/Desktop/Microservices Project/Microservices-Project/Services/test.txt"
+}
+
+
+--- Minio Server: ---
+
+We had to inlcude a minio sever that would be deployed at the same time as the minio service. This just allows you to access
+the minio dashboard and perform all the actions in the minio service application.
+
+
+--- 3. Purchase Service: ---
+
+Example input:
+
+Purchase:
+
+{
+    "orderName": "Dawson Rudolph",
+    "creditCardNumber": "1234567890123456",
+    "items": "T-shirt, Hoodie, Sneakers",
+    "totalCost": "25.87"
+}
+
+Required imports: Flask, request, jsonify, json, random
+
+This flask app is somewhat similar to the login service. This service has three POST functions. The first is a purchase
+function where when provided the correct input, you can make a "purchase". The next function is a order update function
+that picks a random number and sends you an update depending on how many days there are until your order arrives. The
+last function just gives you an order delivered message when hit.
+
+CONCLUSION:
+
+Overall, there are weren't a lot of requirements for this project. The main ones are shown again below:
+
+- 3 services/applications (one allowing for upload to a database and CRUD opperations)
+- 2 Compose files (one with Traefik and one without)
+- Dockerfile
+- RAD document
+
+--- Technologies used: ---
+
+- Python
+- Docker
+- Traefik
+- VS Code (or any IDE)
+- Postman (API testing)
+- Web browser
+- GitHub
